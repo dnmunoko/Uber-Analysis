@@ -1,0 +1,79 @@
+---
+title: "Uber Analysis"
+author: "Dory Munoko"
+date: "12/20/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1. Load Packages
+```{r}
+library(ggplot2)
+library(ggthemes)
+library(lubridate)
+library(dplyr)
+library(tidyr)
+library(DT)
+library(scales)
+```
+
+2. Creating vector of colors to be implemented in our plots
+```{r}
+colors = c("red", "grey", "green", "black", "yellow", "blue", "purple")
+```
+
+3. Reading the Data into their designated variables
+```{r}
+apr <- read.csv("/Users/ruthb/Desktop/Dory's Projects/Uber Project/Uber-dataset/uber-raw-data-apr14.csv")
+may <- read.csv("/Users/ruthb/Desktop/Dory's Projects/Uber Project/Uber-dataset/uber-raw-data-may14.csv")
+jun <- read.csv("/Users/ruthb/Desktop/Dory's Projects/Uber Project/Uber-dataset/uber-raw-data-jun14.csv")
+jul <- read.csv("/Users/ruthb/Desktop/Dory's Projects/Uber Project/Uber-dataset/uber-raw-data-jul14.csv")
+aug <- read.csv("/Users/ruthb/Desktop/Dory's Projects/Uber Project/Uber-dataset/uber-raw-data-aug14.csv")
+sep <- read.csv("/Users/ruthb/Desktop/Dory's Projects/Uber Project/Uber-dataset/uber-raw-data-sep14.csv")
+```
+
+4. Combine all of this data into a single data frame called ‘data’
+```{r}
+data <- rbind(apr, may, jun, jul, aug, sep)
+View(data)
+```
+
+5. Formatting of Date.Time column
+```{r}
+data$Date.Time <- as.POSIXct(data$Date.Time, format = "%m/%d/%Y %H:%M:%S")
+data$Time <- format(as.POSIXct(data$Date.Time, format = "%m/%d/%Y %H:%M:%S"), format="%H:%M:%S")
+data$Date.Time <- ymd_hms(data$Date.Time)
+data$day <- factor(day(data$Date.Time))
+data$month <- factor(month(data$Date.Time, label = TRUE))
+data$year <- factor(year(data$Date.Time))
+data$dayofweek <- factor(wday(data$Date.Time, label = TRUE))
+```
+
+6. Create factors of time objects like day, month, year etc.
+```{r}
+data$hour <- factor(hour(hms(data$Time)))
+data$minute <- factor(minute(hms(data$Time)))
+data$second <- factor(second(hms(data$Time)))
+```
+
+7. Plotting the trips by the hours in a day. We observe that the number of trips are higher in the evening around 5:00 and 6:00 PM.
+```{r}
+hour <- data %>%
+        group_by(hour) %>%
+        dplyr::summarize(Total = n()) 
+datatable(hour)
+```
+
+
+
+
+
+
+
+
+
+
+
