@@ -67,10 +67,158 @@ hour <- data %>%
 datatable(hour)
 ```
 
+8. We will use dplyr to aggregate our data.
+```{r}
+ggplot(hour, aes(hour, Total)) + 
+        geom_bar( stat = "identity", fill = "black", color = "red") +
+           ggtitle("Trips Every Hour") +
+            theme(legend.position = "none") +
+            scale_y_continuous(labels = comma)
 
+month_hour <- data %>%
+          group_by(month, hour) %>%
+             dplyr::summarize(Total = n())
 
+ggplot(month_hour, aes(hour, Total, fill = month)) + 
+       geom_bar( stat = "identity") +
+          ggtitle("Trips by Hour and Month") +
+           scale_y_continuous(labels = comma)
+```
 
+9. Plotting data by trips during every day of the month.
+We observe that 30th of the month had the highest trips in the year which is mostly contributed by the month of April.
+```{r}
+day <- data %>%
+          group_by(day) %>%
+             dplyr::summarize(Total = n()) 
+datatable(day)
+```
 
+```{r}
+ggplot(day, aes(day, Total)) + 
+        geom_bar( stat = "identity", fill = "black", color = "red") +
+           ggtitle("Trips Every Day") +
+            theme(legend.position = "none") +
+            scale_y_continuous(labels = comma)
+```
+
+```{r}
+day_month <- data %>%
+         group_by(month, day) %>%
+             dplyr::summarize(Total = n())
+
+ggplot(day_month, aes(day, Total, fill = month)) + 
+        geom_bar( stat = "identity") +
+           ggtitle("Trips by Day and Month") +
+            scale_y_continuous(labels = comma)+ 
+            scale_fill_manual(values = colors)
+```
+
+10. Number of trips during months in a year
+We observe that most trips were made during the month of September.
+```{r}
+month <- data %>%
+         group_by(month) %>%
+         dplyr::summarize(Total = n()) 
+datatable(month)
+```
+
+```{r}
+ggplot(month, aes(month, Total, fill = month)) + 
+        geom_bar( stat = "identity") +
+           ggtitle("Trips by Month") +
+            theme(legend.position = "none") +
+            scale_y_continuous(labels = comma) +
+            scale_fill_manual(values = colors)
+```
+
+```{r}
+month_weekday <- data %>%
+         group_by(month, dayofweek) %>%
+             dplyr::summarize(Total = n())
+
+ggplot(month_weekday, aes(month, Total, fill = dayofweek)) + 
+       geom_bar( stat = "identity", position = "dodge") +
+          ggtitle("Trips by Day and Month") +
+           scale_y_continuous(labels = comma) +
+           scale_fill_manual(values = colors)
+```
+
+11. Finding out the number of Trips by bases
+In the following visualization, we plot the number of trips that have been taken by the passengers from each of the bases. There are five bases in all out of which, we observe that B02617 had the highest number of trips. Furthermore, this base had the highest number of trips in the month B02617. Thursday observed highest trips in the three bases – B02598, B02617, B02682.
+```{r}
+ggplot(data, aes(Base)) + 
+ geom_bar(fill = "black", color = "red") +
+ scale_y_continuous(labels = comma) +
+ ggtitle("Trips by Bases")
+```
+
+```{r}
+ggplot(data, aes(Base, fill = month)) + 
+ geom_bar(position = "dodge") +
+ scale_y_continuous(labels = comma) +
+ ggtitle("Trips by Bases and Month") +
+ scale_fill_manual(values = colors)
+```
+
+```{r}
+ggplot(data, aes(Base, fill = dayofweek)) + 
+ geom_bar(position = "dodge") +
+ scale_y_continuous(labels = comma) +
+ ggtitle("Trips by Bases and DayofWeek") +
+ scale_fill_manual(values = colors)
+```
+
+12. Creating a Heatmap visualization of day, hour and month
+First, we will plot Heatmap by Hour and Day.
+Second, we will plot Heatmap by Month and Day.
+Third, a Heatmap by Month and Day of the Week.
+Fourth, a Heatmap that delineates Month and Bases.
+Finally, we will plot the heatmap, by bases and day of the week.
+```{r}
+day_hour <- data %>%
+         group_by(day, hour) %>%
+            dplyr::summarize(Total = n())
+datatable(day_hour)
+```
+
+```{r}
+ggplot(day_hour, aes(day, hour, fill = Total)) +
+            geom_tile(color = "black") +
+              ggtitle("Heat Map by Hour and Day")
+```
+
+```{r}
+ggplot(day_month, aes(day, month, fill = Total)) +
+            geom_tile(color = "black") +
+              ggtitle("Heat Map by Month and Day")
+```
+
+```{r}
+ggplot(month_weekday, aes(dayofweek, month, fill = Total)) +
+            geom_tile(color = "black") +
+              ggtitle("Heat Map by Month and Day of Week")
+```
+
+```{r}
+month_base <-  data %>%
+               group_by(Base, month) %>%
+               dplyr::summarize(Total = n()) 
+
+dayofweek_bases <- data %>%
+                   group_by(Base, dayofweek) %>%
+                   dplyr::summarize(Total = n()) 
+
+ggplot(month_base, aes(Base, month, fill = Total)) +
+            geom_tile(color = "black") +
+              ggtitle("Heat Map by Month and Bases")
+```
+
+```{r}
+ggplot(dayofweek_bases, aes(Base, dayofweek, fill = Total)) +
+            geom_tile(color = "black") +
+              ggtitle("Heat Map by Bases and Day of Week")
+```
 
 
 
