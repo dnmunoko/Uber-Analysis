@@ -1,6 +1,6 @@
 ---
 title: "Uber Analysis"
-author: "Dory Munoko"
+author: "Dorcas Munoko"
 date: "12/20/2021"
 output: html_document
 ---
