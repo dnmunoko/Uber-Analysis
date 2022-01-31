@@ -144,7 +144,7 @@ ggplot(month_weekday, aes(month, Total, fill = dayofweek)) +
            scale_fill_manual(values = colors)
 ```
 
-11. Finding out the number of Trips by bases
+11. Finding out the number of Trips by bases 
 In the following visualization, we plot the number of trips that have been taken by the passengers from each of the bases. There are five bases in all out of which, we observe that B02617 had the highest number of trips. Furthermore, this base had the highest number of trips in the month B02617. Thursday observed highest trips in the three bases – B02598, B02617, B02682.
 ```{r}
 ggplot(data, aes(Base)) + 
